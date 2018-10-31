@@ -25,22 +25,17 @@ for i in range(0,len(date)):
 
 now = '%s/%s/%s'%(now.day,now.month,now.year)
 
-"""zipp = ''
-
-for i in both:
-	if (i[0] == now) & (i[1] != 'compress.py'):
-		zipp += "\'%s\',"%i[1]
-"""
-
 name = os.popen('hostname').read()
 name = name[:-1]
-name = 'backup_%s_db_%s%s%s.zip'%(name,form.year,form.month,form.day)
-print(name)
-print(both)
+name = 'backup_%s_db_%s%s%s'%(name,form.year,form.month,form.day)
+os.mkdir(name)
+
 for i in both:
 	if (i[0] == now) & (i[1] != 'compress.py'):
-		print(both[0], both[1])
-		os.system('powershell Compress-Archive -update %s \'%s\''%(i[1],name))
+		print(i[1],i[0])
+		os.system('powershell mv %s %s'%(i[1],name))
+
+os.system('rar a %s.zip %s'%(name,name))
 
 #os.system('rclone copy %s remoto:pontocertodb02.prod.sfl.cloud1.local/%s%s%s'%(name,form.year,form.month,form.day))
 
