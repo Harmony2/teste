@@ -1,5 +1,6 @@
 import os
 import datetime
+import shutil
 
 now = datetime.datetime.now()
 form = now
@@ -23,22 +24,41 @@ both = []
 for i in range(0,len(date)):
 	both.append([date[i][0],files[i]])
 
-now = '%s/%s/%s'%(now.day,now.month,now.year)
+
+if now.day == 1:
+	day = '01'
+else:
+	day = str(now.day)
+
+if now.month < 10:
+	month = "0%s"%now.month
+else:
+	month = str(now.month)
+
+year = str(now.year)
+
+now = "%s/%s/%s"%(day,month,year)
 
 name = os.popen('hostname').read()
 name = name[:-1]
-name = 'backup_%s_db_%s%s%s'%(name,form.year,form.month,form.day)
+name = 'backup_%s_db_%s%s%s'%(name,year,month,day)
 os.mkdir(name)
 
 for i in both:
 	if (i[0] == now) & (i[1] != 'compress.py'):
-		print(i[1],i[0])
-		os.system('powershell mv %s %s'%(i[1],name))
+		print('[+]',i[1],i[0])
+		os.system('powershell mv \'%s\' %s'%(i[1],name))
 
 os.system('rar a %s.zip %s'%(name,name))
 
-#os.system('rclone copy %s remoto:pontocertodb02.prod.sfl.cloud1.local/%s%s%s'%(name,form.year,form.month,form.day))
+if "%s.zip"%name in os.popen('rclone ls remote:pontocertdb02.prod.sfl.cloud1.local/%s%s%s'%(year,month,day)).read():
+	shutil.rmtree(name)
+	os.system('powershell rm %s.zip'%name)
+else:
+	print("[-] Upload failed")
+	quit()
 
-#rclone.exe mkdir remoto:pontocertdb02.prod.sfl.cloud1.local/#date
+print('[+] Done!')
+
 #rclone.exe copy /arquivo remoto:pontocertdb02.prod.sfl.cloud1.local/#date/
 #backup_hostname_db_20181030.zip
