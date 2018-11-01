@@ -49,6 +49,11 @@ for i in both:
 		print('[+]',i[1],i[0])
 		os.system('powershell mv \'%s\' %s'%(i[1],name))
 
+if len(os.listdir(name)) == 0:
+	os.rmdir(name)
+	print('No file was created today')
+	quit()
+
 os.system('rar a %s.zip %s'%(name,name))
 
 if "%s.zip"%name in os.popen('rclone ls remote:pontocertdb02.prod.sfl.cloud1.local/%s%s%s'%(year,month,day)).read():
