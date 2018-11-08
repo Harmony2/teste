@@ -25,8 +25,8 @@ for i in range(0,len(date)):
 	both.append([date[i][0],files[i]])
 
 
-if now.day == 1:
-	day = '01'
+if now.day < 10:
+	day = "0%s"%now.day
 else:
 	day = str(now.day)
 
@@ -37,7 +37,9 @@ else:
 
 year = str(now.year)
 
+#
 now = "%s/%s/%s"%(day,month,year)
+#
 
 name = os.popen('hostname').read()
 name = name[:-1]
@@ -55,9 +57,12 @@ if len(os.listdir(name)) == 0:
 	quit()
 
 os.system('rar a %s.zip %s'%(name,name))
-os.system('rclone copy %s remoto:pontocertdb02.prod.sfl.cloud1.local/%s%s%s/'%(name,year,month,day))
-
+#
+os.system('rclone copy %s remote:pontocertdb02.prod.sfl.cloud1.local/%s%s%s/'%(name,year,month,day))
+#
+#
 if "%s.zip"%name in os.popen('rclone ls remote:pontocertdb02.prod.sfl.cloud1.local/%s%s%s'%(year,month,day)).read():
+#
 	shutil.rmtree(name)
 	os.system('powershell rm %s.zip'%name)
 else:
@@ -66,5 +71,5 @@ else:
 
 print('[+] Done!')
 
-#rclone.exe copy /arquivo remoto:pontocertdb02.prod.sfl.cloud1.local/#date/
+#rclone.exe copy /arquivo remote:pontocertdb02.prod.sfl.cloud1.local/#date/
 #backup_hostname_db_20181030.zip
