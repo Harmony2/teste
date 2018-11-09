@@ -58,7 +58,7 @@ if len(os.listdir(name)) == 0:
 
 os.system('rar a %s.zip %s'%(name,name))
 #
-os.system('rclone copy %s remote:pontocertdb02.prod.sfl.cloud1.local/%s%s%s/'%(name,year,month,day))
+os.system('rclone copy %s.zip remote:pontocertdb02.prod.sfl.cloud1.local/%s%s%s/'%(name,year,month,day))
 #
 #
 if "%s.zip"%name in os.popen('rclone ls remote:pontocertdb02.prod.sfl.cloud1.local/%s%s%s'%(year,month,day)).read():
